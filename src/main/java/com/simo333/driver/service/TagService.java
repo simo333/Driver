@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface TagService {
 
+    Tag findOne(Long tagId);
+
     Tag findOne(String tagName);
 
     List<Tag> findAll();

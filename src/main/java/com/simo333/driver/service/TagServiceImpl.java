@@ -19,6 +19,14 @@ public class TagServiceImpl implements TagService {
     private final TagRepository repository;
 
     @Override
+    public Tag findOne(Long tagId) {
+        return repository.findById(tagId).orElseThrow(() -> {
+            log.error("Tag with id '{}' not found", tagId);
+            return new ResourceNotFoundException(String.format("Tag with id '%s' not found", tagId));
+        });
+    }
+
+    @Override
     public Tag findOne(String tagName) {
         return repository.findByName(tagName).orElseThrow(() -> {
             log.error("Tag with name '{}' not found", tagName);
@@ -36,21 +44,16 @@ public class TagServiceImpl implements TagService {
         return repository.existsByName(tagName);
     }
 
-    //TODO implement desired exception
     @Transactional
     @Override
     public Tag save(Tag tag) {
-        if(!existsByName(tag.getName())) {
-            return repository.save(tag);
-        }
-        log.error("Tag with name '{}' already exists in database", tag.getName());
-        throw new RuntimeException(String.format("Tag with name '%s' already exists in database", tag.getName()));
+        return repository.save(tag);
     }
 
     @Transactional
     @Override
     public Tag update(Tag tag) {
-        findOne(tag.getName());
+        findOne(tag.getId());
         return repository.save(tag);
     }
 
