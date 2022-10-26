@@ -39,11 +39,6 @@ public class TagServiceImpl implements TagService {
         return repository.findAll();
     }
 
-    @Override
-    public boolean existsByName(String tagName) {
-        return repository.existsByName(tagName);
-    }
-
     @Transactional
     @Override
     public Tag save(Tag tag) {
