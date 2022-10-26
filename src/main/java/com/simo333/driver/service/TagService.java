@@ -12,8 +12,6 @@ public interface TagService {
 
     List<Tag> findAll();
 
-    boolean existsByName(String tagName);
-
     Tag save(Tag tag);
 
     Tag update(Tag tag);

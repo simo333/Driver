@@ -1,4 +1,4 @@
-package com.simo333.driver;
+package com.simo333.driver.controller;
 
 import com.simo333.driver.model.Tag;
 import com.simo333.driver.service.TagService;
@@ -22,7 +22,13 @@ public class TagController {
         return service.findAll();
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Tag getById(@PathVariable Long id) {
+        return service.findOne(id);
+    }
+
+    @GetMapping("/name/{name}")
     @ResponseStatus(HttpStatus.OK)
     public Tag getByName(@PathVariable String name) {
         return service.findOne(name);
