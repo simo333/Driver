@@ -97,9 +97,9 @@ public class ApiExceptionHandler {
                 request.getDescription(false));
     }
 
-    @ExceptionHandler(value = InvalidAnswersException.class)
+    @ExceptionHandler(value = IllegalQuestionStateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiExceptionResponse handleInvalidAnswersException(InvalidAnswersException ex, WebRequest request) {
+    public ApiExceptionResponse handleInvalidAnswersException(IllegalQuestionStateException ex, WebRequest request) {
         return new ApiExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
