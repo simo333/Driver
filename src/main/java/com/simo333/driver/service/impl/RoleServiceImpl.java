@@ -1,7 +1,8 @@
-package com.simo333.driver.service;
+package com.simo333.driver.service.impl;
 
 import com.simo333.driver.model.Role;
 import com.simo333.driver.repository.RoleRepository;
+import com.simo333.driver.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;

@@ -22,7 +22,6 @@ public class SecurityConfig {
     //TODO implement security configuration
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        String tagPath = "/api/tags/**";
         http.cors().and().csrf().disable();
         http.authorizeRequests().anyRequest().permitAll();
         return http.build();

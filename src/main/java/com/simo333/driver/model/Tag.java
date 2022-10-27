@@ -11,7 +11,8 @@ import javax.persistence.*;
 @Setter
 public class Tag {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tag_generator")
+    @SequenceGenerator(name = "tag_generator", sequenceName = "tag_seq")
     private Long id;
     @Column(nullable = false, unique = true)
     private String name;
