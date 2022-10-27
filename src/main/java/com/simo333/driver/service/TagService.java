@@ -16,6 +16,6 @@ public interface TagService {
 
     Tag update(Tag tag);
 
-    void delete(Long id);
+    void delete(Long tagId);
 
 }

@@ -96,4 +96,13 @@ public class ApiExceptionHandler {
                 ex.getMessage(),
                 request.getDescription(false));
     }
+
+    @ExceptionHandler(value = InvalidAnswersException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiExceptionResponse handleInvalidAnswersException(InvalidAnswersException ex, WebRequest request) {
+        return new ApiExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                request.getDescription(false));
+    }
 }
