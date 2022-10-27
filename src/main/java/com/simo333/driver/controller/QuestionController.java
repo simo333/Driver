@@ -1,7 +1,8 @@
 package com.simo333.driver.controller;
 
 import com.simo333.driver.model.Question;
-import com.simo333.driver.payload.question.QuestionRequest;
+import com.simo333.driver.payload.question.QuestionCreateRequest;
+import com.simo333.driver.payload.question.QuestionUpdateRequest;
 import com.simo333.driver.service.AnswerService;
 import com.simo333.driver.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -27,18 +28,17 @@ public class QuestionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Question save(@RequestBody @Valid QuestionRequest request) {
+    public Question save(@RequestBody @Valid QuestionCreateRequest request) {
         Question question = questionService.save(request);
         answerService.saveForQuestion(question, request.getAnswers());
 
         return question;
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Question update(@RequestBody @Valid Question question, @PathVariable Long id) {
-        question.setId(id);
-        return questionService.update(question);
+    public Question update(@RequestBody @Valid QuestionUpdateRequest request, @PathVariable Long id) {
+        return questionService.update(id, request);
     }
 
     @DeleteMapping("/{id}")

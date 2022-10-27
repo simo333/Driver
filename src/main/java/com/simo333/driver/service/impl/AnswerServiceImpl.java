@@ -1,8 +1,10 @@
 package com.simo333.driver.service.impl;
 
+import com.simo333.driver.exception.IllegalQuestionStateException;
 import com.simo333.driver.model.Answer;
 import com.simo333.driver.model.Question;
-import com.simo333.driver.payload.answer.AnswerRequest;
+import com.simo333.driver.payload.answer.AnswerCreateRequest;
+import com.simo333.driver.payload.answer.AnswerUpdateRequest;
 import com.simo333.driver.repository.AnswerRepository;
 import com.simo333.driver.service.AnswerService;
 import lombok.RequiredArgsConstructor;
@@ -12,13 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class AnswerServiceImpl implements AnswerService {
+    private static final int MINIMAL_ANSWERS_AMOUNT_PER_QUESTION = 2;
 
     private final AnswerRepository answerRepository;
 
@@ -35,18 +37,13 @@ public class AnswerServiceImpl implements AnswerService {
         return answerRepository.findByQuestionId(questionId);
     }
 
-    @Transactional
-    @Override
-    public Answer save(Answer answer) {
-        return answerRepository.save(answer);
-    }
 
     @Transactional
     @Override
-    public void saveForQuestion(Question question, List<AnswerRequest> answerRequests) {
-        log.info("Creating {} Answers for Question {}.", answerRequests.size(), question.getId());
+    public void saveForQuestion(Question question, List<AnswerCreateRequest> answerCreateRequests) {
+        log.info("Creating {} Answers for Question {}.", answerCreateRequests.size(), question.getId());
 
-        List<Answer> answers = answerRequests
+        List<Answer> answers = answerCreateRequests
                 .stream()
                 .map(answer -> buildAnswerForQuestion(question, answer))
                 .toList();
@@ -56,18 +53,28 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Transactional
     @Override
-    public Answer update(Answer answer) {
-        findById(answer.getId());
+    public Answer update(Long answerId, AnswerUpdateRequest request) {
+        Answer answer = findById(answerId);
+        answer.setContents(request.getText());
+        log.info("Updating answer. After changers: {}", answer);
         return answerRepository.save(answer);
     }
 
     @Transactional
     @Override
     public void delete(Long answerId) {
+        Answer answer = findById(answerId);
+        if (answerRepository.countByQuestionId(answer.getQuestion().getId()) == MINIMAL_ANSWERS_AMOUNT_PER_QUESTION) {
+            throw new IllegalQuestionStateException("Cannot delete. Question has to have at least 2 answers.");
+        }
+        if(answer.isCorrect()) {
+            throw new IllegalQuestionStateException(
+                    String.format("Cannot delete Answer '%s'. Question has to have a correct answer.", answerId));
+        }
         answerRepository.deleteById(answerId);
     }
 
-    private Answer buildAnswerForQuestion(Question question, AnswerRequest request) {
+    private Answer buildAnswerForQuestion(Question question, AnswerCreateRequest request) {
         return Answer.builder()
                 .contents(request.getText())
                 .isCorrect(request.getIsCorrect())

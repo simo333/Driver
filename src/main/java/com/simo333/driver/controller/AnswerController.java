@@ -1,8 +1,7 @@
 package com.simo333.driver.controller;
 
 import com.simo333.driver.model.Answer;
-import com.simo333.driver.model.Question;
-import com.simo333.driver.model.Tag;
+import com.simo333.driver.payload.answer.AnswerUpdateRequest;
 import com.simo333.driver.service.AnswerService;
 import com.simo333.driver.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 public class AnswerController {
 
     private final AnswerService service;
-    private final QuestionService questionService;
 
     @GetMapping("/questions/{questionId}/answers")
     @ResponseStatus(HttpStatus.OK)
@@ -26,13 +24,16 @@ public class AnswerController {
         return service.findAllByQuestionId(questionId);
     }
 
-    @PostMapping("questions/{questionId}/answers")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Answer save(@RequestBody @Valid Answer answer, @PathVariable Long questionId) {
-        Question question = questionService.findOne(questionId);
-        answer.setQuestion(question);
-        return service.save(answer);
+    @PutMapping("answers/{answerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Answer update(@RequestBody @Valid AnswerUpdateRequest request, @PathVariable Long answerId) {
+        return service.update(answerId, request);
     }
 
+    @DeleteMapping("/answers/{answerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable Long answerId) {
+        service.delete(answerId);
+    }
 
 }

@@ -1,9 +1,10 @@
 package com.simo333.driver.service.impl;
 
-import com.simo333.driver.exception.InvalidAnswersException;
+import com.simo333.driver.exception.IllegalQuestionStateException;
 import com.simo333.driver.model.Question;
-import com.simo333.driver.payload.answer.AnswerRequest;
-import com.simo333.driver.payload.question.QuestionRequest;
+import com.simo333.driver.payload.answer.AnswerCreateRequest;
+import com.simo333.driver.payload.question.QuestionCreateRequest;
+import com.simo333.driver.payload.question.QuestionUpdateRequest;
 import com.simo333.driver.repository.QuestionRepository;
 import com.simo333.driver.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 @Slf4j
 public class QuestionServiceImpl implements QuestionService {
 
+    private static final int NUMBER_OF_CORRECT_ANSWERS = 1;
     private final QuestionRepository repository;
 
     @Override
@@ -38,7 +40,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Transactional
     @Override
-    public Question save(QuestionRequest request) {
+    public Question save(QuestionCreateRequest request) {
         validateOneCorrectAnswer(request);
         log.info("Saving a new question : {}", request.getQuestionText());
         Question question = buildQuestion(request);
@@ -48,8 +50,15 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Transactional
     @Override
-    public Question update(Question question) {
-        findOne(question.getId());
+    public Question update(Long questionId, QuestionUpdateRequest request) {
+        Question question = findOne(questionId);
+        if (request.getTrainingId() != null) {
+            //TODO check if training exists
+        }
+        if(request.getQuestionText() != null) {
+            question.setContents(request.getQuestionText());
+        }
+        log.info("Updating question. After changes: {}", question);
         return repository.save(question);
     }
 
@@ -59,19 +68,19 @@ public class QuestionServiceImpl implements QuestionService {
         repository.deleteById(questionId);
     }
 
-    public Question buildQuestion(QuestionRequest request) {
+    public Question buildQuestion(QuestionCreateRequest request) {
         return Question.builder()
                 .contents(request.getQuestionText())
                 .build();
 
     }
 
-    public void validateOneCorrectAnswer(QuestionRequest request) {
-        long correctAnswers = request.getAnswers().stream().filter(AnswerRequest::getIsCorrect).count();
+    public void validateOneCorrectAnswer(QuestionCreateRequest request) {
+        long correctAnswers = request.getAnswers().stream().filter(AnswerCreateRequest::getIsCorrect).count();
         log.info(request.toString());
-        if (correctAnswers != 1) {
+        if (correctAnswers != NUMBER_OF_CORRECT_ANSWERS) {
             log.error("Question has to have exactly one correct answer. Found: {}", correctAnswers);
-            throw new InvalidAnswersException("Question has to have exactly one correct answer. Found: " + correctAnswers);
+            throw new IllegalQuestionStateException("Question has to have exactly one correct answer. Found: " + correctAnswers);
         }
     }
 }
