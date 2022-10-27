@@ -65,10 +65,11 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional
     @Override
     public void delete(Long questionId) {
+        log.info("Deleting Question '{}'", questionId);
         repository.deleteById(questionId);
     }
 
-    public Question buildQuestion(QuestionCreateRequest request) {
+    private Question buildQuestion(QuestionCreateRequest request) {
         return Question.builder()
                 .contents(request.getQuestionText())
                 .build();
