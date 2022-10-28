@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -23,8 +22,8 @@ public class Advice {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "advice_generator")
     @SequenceGenerator(name = "advice_generator", sequenceName = "advice_seq")
     private Long id;
-    @NotNull
     @Size(min = 3, max = 100)
+    @Column(unique = true, nullable = false)
     private String title;
     @NotBlank
     private String description;
