@@ -74,7 +74,7 @@ public class AdviceServiceImpl implements AdviceService {
     @Transactional
     @Override
     public void delete(Long adviceId) {
-        //TODO check how to delete properly
+        //TODO check how to delete properly (should delete all related entries)
         repository.deleteById(adviceId);
     }
 
