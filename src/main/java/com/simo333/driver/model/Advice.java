@@ -1,7 +1,6 @@
 package com.simo333.driver.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +13,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "advices")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class Advice {
@@ -36,7 +38,6 @@ public class Advice {
     private Training training;
     @OneToMany(mappedBy = "advice", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
-    @NotNull
     @Positive
     private int shareQuantity = 0;
     @Column(updatable = false)

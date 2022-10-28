@@ -30,7 +30,7 @@ public class Question {
     )
     private List<Answer> answers = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "training_id", referencedColumnName = "id")
+    @JoinColumn(name = "training_id")
     private Training training;
     //TODO files (photos or videos) maintenance
 }

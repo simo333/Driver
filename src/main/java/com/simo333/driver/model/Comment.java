@@ -21,10 +21,10 @@ public class Comment {
     private String text;
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", updatable = false, referencedColumnName = "id")
+    @JoinColumn(name = "user_id", updatable = false)
     private User user;
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "advice_id", updatable = false, referencedColumnName = "id")
+    @JoinColumn(name = "advice_id", updatable = false)
     private Advice advice;
 }
