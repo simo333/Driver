@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,22 +35,26 @@ public class CompletedQuizServiceImpl implements CompletedQuizService {
 
     @Override
     public Page<CompletedQuizResponse> getQuizzesByUser(Long userId, Pageable page) {
-        return null;
+        return repository.findAllByUserId(userId, page);
     }
 
     @Override
     public Page<CompletedQuizResponse> getQuizzesByAdvice(Long adviceId, Pageable page) {
-        return null;
+        return repository.findAllByAdviceId(adviceId, page);
     }
 
     @Override
     public List<CompletedQuizResponse> getQuizzesByUserAndAdvice(Long userId, Long adviceId) {
-        return null;
+        return repository.findAllByUserIdAndAdviceId(userId, adviceId);
     }
 
     @Override
     public CompletedQuizResponse getHighestScoreQuizByUserAndAdvice(Long userId, Long adviceId) {
-        return null;
+        return repository.findTopByUserIdAndAdviceId(userId, adviceId).orElseThrow(() -> {
+            log.error("Completed Quiz for User id '{}' and Advice id '{}' not found", userId, adviceId);
+            return new ResourceNotFoundException(
+                    String.format("Completed Quiz for User id '%s' and Advice id '%s' not found", userId, adviceId));
+        });
     }
 
     @Transactional

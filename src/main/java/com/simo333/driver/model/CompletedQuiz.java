@@ -19,10 +19,10 @@ public class CompletedQuiz {
     @SequenceGenerator(name = "quiz_generator", sequenceName = "quiz_seq")
     private Long id;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "advice_id", unique = true, referencedColumnName = "advice_id")
+    @JoinColumn(name = "advice_id")
     private Advice advice;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(updatable = false, referencedColumnName = "user_id")
+    @JoinColumn(updatable = false)
     private User user;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "quiz_answers", joinColumns = @JoinColumn(name = "completed_quiz_id"),
