@@ -1,6 +1,7 @@
 package com.simo333.driver.service;
 
 import com.simo333.driver.model.Tag;
+import com.simo333.driver.payload.tag.TagRequest;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface TagService {
 
     List<Tag> findAll();
 
-    Tag save(Tag tag);
+    Tag save(TagRequest request);
 
-    Tag update(Tag tag);
+    Tag update(Long tagId, TagRequest request);
 
     void delete(Long tagId);
 
