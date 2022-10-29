@@ -45,10 +45,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public Tag save(TagRequest request) {
-        if(repository.existsByName(request.getTagName())) {
-            log.error("'{}' tag already exists", request.getTagName());
-            throw new TagUniqueViolationException(request.getTagName() + " tag already exists.");
-        }
+        checkTagNameUnique(request.getTagName());
         Tag tag = new Tag();
         tag.setName(request.getTagName());
         log.info("Saving a new tag with name: {}", tag.getName());
@@ -58,10 +55,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public Tag update(Long id, TagRequest request) {
-        if (repository.existsByName(request.getTagName())) {
-            log.error("'{}' tag already exists", request.getTagName());
-            throw new TagUniqueViolationException(request.getTagName() + " tag already exists.");
-        }
+        checkTagNameUnique(request.getTagName());
         Tag tag = findOne(id);
         tag.setName(request.getTagName());
         log.info("Updating a new tag: {}", tag);
@@ -72,5 +66,12 @@ public class TagServiceImpl implements TagService {
     @Override
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private void checkTagNameUnique(String tagName) {
+        if (repository.existsByName(tagName)) {
+            log.error("'{}' tag already exists", tagName);
+            throw new TagUniqueViolationException(tagName + " tag already exists.");
+        }
     }
 }
