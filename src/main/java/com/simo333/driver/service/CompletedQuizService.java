@@ -1,8 +1,8 @@
 package com.simo333.driver.service;
 
 import com.simo333.driver.model.CompletedQuiz;
-import com.simo333.driver.payload.quizz.CompletedQuizCreateRequest;
-import com.simo333.driver.payload.quizz.CompletedQuizResponse;
+import com.simo333.driver.payload.completed_quiz.CompletedQuizCreateRequest;
+import com.simo333.driver.payload.completed_quiz.CompletedQuizResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
