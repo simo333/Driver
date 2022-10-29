@@ -1,7 +1,7 @@
 package com.simo333.driver.repository;
 
 import com.simo333.driver.model.CompletedQuiz;
-import com.simo333.driver.payload.quizz.CompletedQuizResponse;
+import com.simo333.driver.payload.completed_quiz.CompletedQuizResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

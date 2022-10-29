@@ -1,4 +1,4 @@
-package com.simo333.driver.payload.quizz;
+package com.simo333.driver.payload.completed_quiz;
 
 import lombok.Data;
 
@@ -9,6 +9,7 @@ import java.util.List;
 public class CompletedQuizCreateRequest {
     @NotNull
     private Long userId;
+    @NotNull
     private Long adviceId;
     private List<Long> answers;
 }

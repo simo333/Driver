@@ -1,4 +1,4 @@
-package com.simo333.driver.payload.quizz;
+package com.simo333.driver.payload.completed_quiz;
 
 import lombok.Data;
 

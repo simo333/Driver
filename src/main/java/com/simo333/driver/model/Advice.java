@@ -6,7 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,18 +32,19 @@ public class Advice {
             joinColumns = @JoinColumn(name = "advice_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "training_id", updatable = false, referencedColumnName = "id")
-    private Training training;
     @OneToMany(mappedBy = "advice", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Question> questions = new HashSet<>();
+    @Positive
+    private int likesQuantity = 0;
     @Positive
     private int shareQuantity = 0;
     @Column(updatable = false)
-    private LocalDate date;
+    private Instant timeStamp;
 
     @PrePersist
     public void prePersist() {
-        date = LocalDate.now();
+        timeStamp = Instant.now();
     }
 }
