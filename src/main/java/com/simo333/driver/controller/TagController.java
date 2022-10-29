@@ -1,6 +1,7 @@
 package com.simo333.driver.controller;
 
 import com.simo333.driver.model.Tag;
+import com.simo333.driver.payload.tag.TagRequest;
 import com.simo333.driver.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,15 +37,14 @@ public class TagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Tag save(@RequestBody @Valid Tag tag) {
-        return service.save(tag);
+    public Tag save(@RequestBody @Valid TagRequest request) {
+        return service.save(request);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Tag update(@RequestBody @Valid Tag tag, @PathVariable Long id) {
-        tag.setId(id);
-        return service.update(tag);
+    public Tag update(@RequestBody @Valid TagRequest request, @PathVariable Long id) {
+        return service.update(id, request);
     }
 
     @DeleteMapping("/{id}")
