@@ -1,6 +1,5 @@
 package com.simo333.driver.payload.training;
 
-import com.simo333.driver.model.Answer;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -11,5 +10,5 @@ import java.util.Set;
 public class TrainingResultRequest {
     @NotNull
     private Long trainingId;
-    private final Set<Answer> givenAnswers = new HashSet<>();
+    private final Set<Long> answers = new HashSet<>();
 }

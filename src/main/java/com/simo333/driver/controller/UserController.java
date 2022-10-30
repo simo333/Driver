@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -18,38 +21,38 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public Page<User> getAllUsers(Pageable page) {
         return service.findAll(page);
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public User getById(@PathVariable Long id) {
         return service.findOne(id);
     }
 
     @GetMapping("/name/{name}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public User getByUsername(@PathVariable String name) {
         return service.findOne(name);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public User save(@RequestBody @Valid User user) {
         return service.save(user);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public User update(@RequestBody @Valid User user, @PathVariable Long id) {
         user.setId(id);
         return service.update(user);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }

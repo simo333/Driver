@@ -9,5 +9,5 @@ import javax.validation.constraints.Size;
 public class TagRequest {
     @NotNull
     @Size(min = 3, max = 30)
-    private String tagName;
+    private String name;
 }
