@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface AdviceRepository extends JpaRepository<Advice, Long> {
 
     Page<Advice> findAllByTagsName(String tagName, Pageable page);
+
+    boolean existsByTitle(String title);
 }

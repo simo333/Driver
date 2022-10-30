@@ -2,7 +2,9 @@ package com.simo333.driver.controller;
 
 import com.simo333.driver.model.Advice;
 import com.simo333.driver.model.TrainingEntry;
-import com.simo333.driver.payload.advice.AdviceRequest;
+import com.simo333.driver.payload.advice.AdviceCreateRequest;
+import com.simo333.driver.payload.advice.AdviceQuestionsRequest;
+import com.simo333.driver.payload.advice.AdviceUpdateRequest;
 import com.simo333.driver.payload.training.TrainingResultRequest;
 import com.simo333.driver.payload.training.TrainingResultResponse;
 import com.simo333.driver.service.AdviceService;
@@ -10,11 +12,11 @@ import com.simo333.driver.service.TrainingEntryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -34,15 +36,21 @@ public class AdviceController {
         return service.findAllByTag(tag, page);
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(OK)
+    public Advice getById(@PathVariable Long id) {
+        return service.findOne(id);
+    }
+
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Advice save(@RequestBody @Valid AdviceRequest request) {
+    @ResponseStatus(CREATED)
+    public Advice save(@RequestBody @Valid AdviceCreateRequest request) {
         return service.save(request);
     }
 
     @PatchMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Advice update(@PathVariable Long id, @RequestBody @Valid AdviceRequest request) {
+    @ResponseStatus(OK)
+    public Advice update(@PathVariable Long id, @RequestBody @Valid AdviceUpdateRequest request) {
         return service.update(id, request);
     }
 
@@ -52,15 +60,27 @@ public class AdviceController {
         service.delete(id);
     }
 
+    @PostMapping("/{id}/add-questions")
+    @ResponseStatus(OK)
+    public void addQuestionsToAdvice(@PathVariable Long id, @RequestBody @Valid AdviceQuestionsRequest request) {
+        service.addQuestionsToAdvice(id, request);
+    }
+
+    @DeleteMapping("/{id}/remove-questions")
+    @ResponseStatus(OK)
+    public void removeQuestionsFromAdvice(@PathVariable Long id, @RequestBody @Valid AdviceQuestionsRequest request) {
+        service.removeQuestionsFromAdvice(id, request);
+    }
+
     @GetMapping("/{id}/training")
     @ResponseStatus(OK)
     public TrainingEntry sendTrainingQuestions(@PathVariable("id") Long adviceId) {
         return trainingService.conductNewTraining(adviceId);
     }
 
-    @PostMapping("/verify-training/{id}")
+    @PostMapping("/verify-training")
     @ResponseStatus(OK)
-    public TrainingResultResponse verifyTraining(@RequestBody TrainingResultRequest result, @PathVariable Long id) {
+    public TrainingResultResponse verifyTraining(@RequestBody @Valid TrainingResultRequest result) {
         return trainingService.verifyTraining(result);
     }
 }
