@@ -9,7 +9,7 @@ public interface RoleService {
 
     List<Role> findAll();
 
-    Role findOne(String name);
+    Role findOne(Role.Type type);
 
     Role findOne(Long userId);
 

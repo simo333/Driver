@@ -93,11 +93,9 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiExceptionResponse handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex, WebRequest request) {
-        String message = String.format("'%s' request method not supported.", ex.getMessage());
         return new ApiExceptionResponse(
                 HttpStatus.BAD_REQUEST,
-                message,
-                request.getDescription(false));
+                ex.getMessage(),
     }
 
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
