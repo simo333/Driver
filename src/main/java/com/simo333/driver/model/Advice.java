@@ -36,9 +36,7 @@ public class Advice {
     private Set<Comment> comments = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Question> questions = new HashSet<>();
-    @Positive
     private int likesQuantity = 0;
-    @Positive
     private int shareQuantity = 0;
     @Column(updatable = false)
     private Instant timeStamp;
@@ -46,5 +44,18 @@ public class Advice {
     @PrePersist
     public void prePersist() {
         timeStamp = Instant.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Advice{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", tags=" + tags +
+                ", likesQuantity=" + likesQuantity +
+                ", shareQuantity=" + shareQuantity +
+                ", timeStamp=" + timeStamp +
+                '}';
     }
 }

@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+
 @RestController
 @RequestMapping("/api/roles")
 @RequiredArgsConstructor
@@ -16,13 +19,13 @@ public class RoleController {
     private final RoleService service;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public List<Role> getAllRoles() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(OK)
     public Role getById(@PathVariable Long id) {
         return service.findOne(id);
     }

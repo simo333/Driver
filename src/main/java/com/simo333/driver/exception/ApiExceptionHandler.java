@@ -1,5 +1,6 @@
 package com.simo333.driver.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolationException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @RestControllerAdvice
+@Slf4j
 public class ApiExceptionHandler {
 
     @ExceptionHandler(value = AccessDeniedException.class)
@@ -35,8 +38,9 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiExceptionResponse handleHttpMessageNotReadableException(WebRequest request) {
+    public ApiExceptionResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
         String message = "Request body is missing or some of inputs are incorrect.";
+        log.error(ex.getLocalizedMessage());
         return new ApiExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 message,
@@ -48,6 +52,13 @@ public class ApiExceptionHandler {
         Map<String, String> errorsMap = new HashMap<>();
         e.getBindingResult().getFieldErrors().forEach(error -> errorsMap.put(error.getField(), error.getDefaultMessage()));
         return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
+        Map<String, String> errorMap = new HashMap<>();
+        e.getConstraintViolations().forEach(error -> errorMap.put(error.getPropertyPath().toString(), error.getMessage()));
+        return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = ResourceNotFoundException.class)
@@ -62,9 +73,10 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiExceptionResponse handleSQLIntegrityConstraintViolationException(WebRequest request, SQLIntegrityConstraintViolationException e) {
+        String message = "Cannot delete or update a parent row: a foreign key constraint fails.";
         return new ApiExceptionResponse(
                 HttpStatus.BAD_REQUEST,
-                e.getMessage(),
+                message,
                 request.getDescription(false));
     }
 
@@ -84,7 +96,6 @@ public class ApiExceptionHandler {
         return new ApiExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
-                request.getDescription(false));
     }
 
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
@@ -116,9 +127,9 @@ public class ApiExceptionHandler {
                 request.getDescription(false));
     }
 
-    @ExceptionHandler(value = TagUniqueViolationException.class)
+    @ExceptionHandler(value = UniqueViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiExceptionResponse handleInvalidAnswersException(TagUniqueViolationException ex, WebRequest request) {
+    public ApiExceptionResponse handleInvalidAnswersException(UniqueViolationException ex, WebRequest request) {
         return new ApiExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),

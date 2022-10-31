@@ -9,11 +9,11 @@ import com.simo333.driver.repository.QuestionRepository;
 import com.simo333.driver.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,8 +33,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> findAll() {
-        return repository.findAll();
+    public Page<Question> findAll(Pageable page) {
+        return repository.findAll(page);
     }
 
 
@@ -44,7 +44,6 @@ public class QuestionServiceImpl implements QuestionService {
         validateOneCorrectAnswer(request);
         log.info("Saving a new question : {}", request.getQuestionText());
         Question question = buildQuestion(request);
-
         return repository.save(question);
     }
 
@@ -52,12 +51,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Question update(Long questionId, QuestionUpdateRequest request) {
         Question question = findOne(questionId);
-        if (request.getTrainingId() != null) {
-            //TODO check if training exists
-        }
-        if(request.getQuestionText() != null) {
-            question.setContents(request.getQuestionText());
-        }
         log.info("Updating question. After changes: {}", question);
         return repository.save(question);
     }
@@ -81,7 +74,8 @@ public class QuestionServiceImpl implements QuestionService {
         log.info(request.toString());
         if (correctAnswers != NUMBER_OF_CORRECT_ANSWERS) {
             log.error("Question has to have exactly one correct answer. Found: {}", correctAnswers);
-            throw new IllegalQuestionStateException("Question has to have exactly one correct answer. Found: " + correctAnswers);
+            throw new IllegalQuestionStateException(
+                    "Question has to have exactly one correct answer. Found: " + correctAnswers);
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.simo333.driver.service.impl;
 
-import com.simo333.driver.exception.TagUniqueViolationException;
+import com.simo333.driver.exception.UniqueViolationException;
 import com.simo333.driver.model.Tag;
 import com.simo333.driver.payload.tag.TagRequest;
 import com.simo333.driver.repository.TagRepository;
@@ -45,9 +45,9 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public Tag save(TagRequest request) {
-        checkTagNameUnique(request.getTagName());
+        checkTagNameUnique(request.getName());
         Tag tag = new Tag();
-        tag.setName(request.getTagName());
+        tag.setName(request.getName());
         log.info("Saving a new tag with name: {}", tag.getName());
         return repository.save(tag);
     }
@@ -55,9 +55,9 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public Tag update(Long id, TagRequest request) {
-        checkTagNameUnique(request.getTagName());
+        checkTagNameUnique(request.getName());
         Tag tag = findOne(id);
-        tag.setName(request.getTagName());
+        tag.setName(request.getName());
         log.info("Updating a new tag: {}", tag);
         return repository.save(tag);
     }
@@ -71,7 +71,7 @@ public class TagServiceImpl implements TagService {
     private void checkTagNameUnique(String tagName) {
         if (repository.existsByName(tagName)) {
             log.error("'{}' tag already exists", tagName);
-            throw new TagUniqueViolationException(tagName + " tag already exists.");
+            throw new UniqueViolationException(String.format("'%s' tag already exists.", tagName));
         }
     }
 }
