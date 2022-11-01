@@ -96,6 +96,7 @@ public class ApiExceptionHandler {
         return new ApiExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
+                request.getDescription(false));
     }
 
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)

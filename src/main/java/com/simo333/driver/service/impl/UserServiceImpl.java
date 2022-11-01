@@ -2,6 +2,7 @@ package com.simo333.driver.service.impl;
 
 import com.simo333.driver.model.User;
 import com.simo333.driver.repository.UserRepository;
+import com.simo333.driver.service.RefreshTokenService;
 import com.simo333.driver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final RefreshTokenService tokenService;
 
     @Override
     public Page<User> findAll(Pageable page) {
@@ -77,6 +79,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void delete(Long id) {
+        tokenService.deleteByUser(findOne(id));
         log.info("Deleting user with id '{}'", id);
         userRepository.deleteById(id);
     }

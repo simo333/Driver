@@ -5,10 +5,10 @@ import com.simo333.driver.model.RefreshToken;
 import com.simo333.driver.model.User;
 import com.simo333.driver.repository.RefreshTokenRepository;
 import com.simo333.driver.service.RefreshTokenService;
-import com.simo333.driver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +24,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Value("${app.security.refresh-token.expirationMs}")
     private Long refreshTokenDurationMs;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
 
     @Transactional(readOnly = true)
     @Override
@@ -39,9 +38,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public RefreshToken create(String username) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         RefreshToken refreshToken = new RefreshToken();
 
-        refreshToken.setUser(userService.findOne(username));
+        refreshToken.setUser(principal);
         refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
         refreshToken.setToken(UUID.randomUUID().toString());
 
