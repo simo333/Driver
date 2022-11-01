@@ -76,8 +76,8 @@ public class AdviceServiceImpl implements AdviceService {
             advice.setTags(new HashSet<>());
         } else if (option == AdviceUpdateRequest.Option.REPLACE) {
             Set<Tag> tags = new HashSet<>();
-            if (request.getTags() != null) {
-                request.getTags().forEach(tagName -> tags.add(tagService.findOne(tagName)));
+            if (request.getTagNames() != null) {
+                request.getTagNames().forEach(tagName -> tags.add(tagService.findOne(tagName)));
             }
             advice.setTags(tags);
         }
