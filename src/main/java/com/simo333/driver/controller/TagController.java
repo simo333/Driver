@@ -5,6 +5,7 @@ import com.simo333.driver.payload.tag.TagRequest;
 import com.simo333.driver.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,18 +39,21 @@ public class TagController {
         return service.findOne(name);
     }
 
+    @Secured("ROLE_ADMIN")
     @PostMapping
     @ResponseStatus(CREATED)
     public Tag save(@RequestBody @Valid TagRequest request) {
         return service.save(request);
     }
 
+    @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     @ResponseStatus(OK)
     public Tag update(@RequestBody @Valid TagRequest request, @PathVariable Long id) {
         return service.update(id, request);
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     @ResponseStatus(OK)
     public void delete(@PathVariable Long id) {

@@ -12,6 +12,7 @@ import com.simo333.driver.service.TrainingEntryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,30 +43,35 @@ public class AdviceController {
         return service.findOne(id);
     }
 
+    @Secured("ROLE_ADMIN")
     @PostMapping
     @ResponseStatus(CREATED)
     public Advice save(@RequestBody @Valid AdviceCreateRequest request) {
         return service.save(request);
     }
 
+    @Secured("ROLE_ADMIN")
     @PatchMapping("/{id}")
     @ResponseStatus(OK)
     public Advice update(@PathVariable Long id, @RequestBody @Valid AdviceUpdateRequest request) {
         return service.update(id, request);
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     @ResponseStatus(OK)
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 
+    @Secured("ROLE_ADMIN")
     @PostMapping("/{id}/add-questions")
     @ResponseStatus(OK)
     public void addQuestionsToAdvice(@PathVariable Long id, @RequestBody @Valid AdviceQuestionsRequest request) {
         service.addQuestionsToAdvice(id, request);
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}/remove-questions")
     @ResponseStatus(OK)
     public void removeQuestionsFromAdvice(@PathVariable Long id, @RequestBody @Valid AdviceQuestionsRequest request) {
