@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,6 +38,7 @@ public class QuestionController {
         return questionService.findOne(id);
     }
 
+    @Secured("ROLE_ADMIN")
     @PostMapping
     @ResponseStatus(CREATED)
     public Question save(@RequestBody @Valid QuestionCreateRequest request) {
@@ -46,12 +48,14 @@ public class QuestionController {
         return question;
     }
 
+    @Secured("ROLE_ADMIN")
     @PatchMapping("/{id}")
     @ResponseStatus(OK)
     public Question update(@RequestBody @Valid QuestionUpdateRequest request, @PathVariable Long id) {
         return questionService.update(id, request);
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     @ResponseStatus(OK)
     public void delete(@PathVariable Long id) {
