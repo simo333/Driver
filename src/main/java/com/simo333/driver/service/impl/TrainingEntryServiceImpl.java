@@ -10,6 +10,7 @@ import com.simo333.driver.repository.TrainingEntryRepository;
 import com.simo333.driver.service.AdviceService;
 import com.simo333.driver.service.AnswerService;
 import com.simo333.driver.service.TrainingEntryService;
+import com.simo333.driver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -39,7 +40,7 @@ public class TrainingEntryServiceImpl implements TrainingEntryService {
             throw new ResourceNotFoundException("No questions found for advice id " + adviceId);
         }
 
-        TrainingEntry entry = new TrainingEntry(null, questions, null);
+        TrainingEntry entry = new TrainingEntry(null, questions);
         return repository.save(entry);
     }
 
@@ -54,7 +55,6 @@ public class TrainingEntryServiceImpl implements TrainingEntryService {
         TrainingResultResponse response = buildTrainingResponse(trainingEntry, request);
         log.info("Training result: {}", response);
         repository.deleteById(request.getTrainingId());
-        //TODO save result for user?
         return response;
     }
 

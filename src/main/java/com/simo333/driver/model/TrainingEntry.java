@@ -18,5 +18,4 @@ public class TrainingEntry {
     private Long id;
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Question> questions;
-    private Long userId;
 }

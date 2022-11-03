@@ -1,6 +1,6 @@
 package com.simo333.driver.service.impl;
 
-import com.simo333.driver.exception.UniqueViolationException;
+import com.simo333.driver.exception.UniqueNameViolationException;
 import com.simo333.driver.model.Advice;
 import com.simo333.driver.model.Question;
 import com.simo333.driver.model.Tag;
@@ -126,7 +126,7 @@ public class AdviceServiceImpl implements AdviceService {
     private void checkTitleUnique(String title) {
         if (repository.existsByTitle(title)) {
             log.error("Advice with title '{}' already exists", title);
-            throw new UniqueViolationException(title + " title already exists.");
+            throw new UniqueNameViolationException(title + " title already exists.");
         }
     }
 }

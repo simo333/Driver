@@ -1,17 +1,17 @@
 package com.simo333.driver.controller;
 
 import com.simo333.driver.model.User;
+import com.simo333.driver.payload.user.PatchUserRequest;
+import com.simo333.driver.payload.user.UserUpdateRequest;
 import com.simo333.driver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -43,18 +43,16 @@ public class UserController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping
-    @ResponseStatus(CREATED)
-    public User save(@RequestBody @Valid User user) {
-        return service.save(user);
-    }
-
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @PutMapping("/{id}")
     @ResponseStatus(OK)
-    public User update(@RequestBody @Valid User user, @PathVariable Long id) {
-        user.setId(id);
-        return service.update(user);
+    public User update(@RequestBody @Valid UserUpdateRequest request, @PathVariable Long id) {
+        return service.update(id, request);
+    }
+    @Secured("ROLE_USER")
+    @PatchMapping
+    @ResponseStatus(OK)
+    public void patch(@RequestBody @Valid PatchUserRequest patch) {
+        service.patch(patch);
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})

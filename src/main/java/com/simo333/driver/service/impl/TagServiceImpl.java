@@ -1,6 +1,6 @@
 package com.simo333.driver.service.impl;
 
-import com.simo333.driver.exception.UniqueViolationException;
+import com.simo333.driver.exception.UniqueNameViolationException;
 import com.simo333.driver.model.Tag;
 import com.simo333.driver.payload.tag.TagRequest;
 import com.simo333.driver.repository.TagRepository;
@@ -71,7 +71,7 @@ public class TagServiceImpl implements TagService {
     private void checkTagNameUnique(String tagName) {
         if (repository.existsByName(tagName)) {
             log.error("'{}' tag already exists", tagName);
-            throw new UniqueViolationException(String.format("'%s' tag already exists.", tagName));
+            throw new UniqueNameViolationException(String.format("'%s' tag already exists.", tagName));
         }
     }
 }

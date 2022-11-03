@@ -1,6 +1,9 @@
 package com.simo333.driver.service.impl;
 
+import com.simo333.driver.exception.UsernameDuplicationException;
 import com.simo333.driver.model.User;
+import com.simo333.driver.payload.user.PatchUserRequest;
+import com.simo333.driver.payload.user.UserUpdateRequest;
 import com.simo333.driver.repository.UserRepository;
 import com.simo333.driver.service.RefreshTokenService;
 import com.simo333.driver.service.UserService;
@@ -9,6 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -52,28 +59,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
+    public void checkUsernameAvailable(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new UsernameDuplicationException("User with this username already exists");
+        }
     }
 
     @Transactional
     @Override
     public User save(User user) {
+        checkUsernameAvailable(user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setEnabled(true);
         log.info("Saving a new user: {}", user.getUsername());
         return userRepository.save(user);
     }
 
     @Transactional
     @Override
-    public User update(User user) {
-        findOne(user.getId());
-        if (user.getPassword() != null) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
+    public User update(Long userId, UserUpdateRequest request) {
+        User user = findOne(userId);
+        User updatedUser = applyUpdate(user, request);
         log.info("Updating user with id '{}'", user.getId());
-        return userRepository.save(user);
+        return userRepository.save(updatedUser);
+    }
+
+    @Transactional
+    @Override
+    public void patch(PatchUserRequest patch) {
+        User currentUser = getCurrentUser();
+        currentUser.setPassword(passwordEncoder.encode(patch.getPassword()));
+        log.info("Patching user's password. For user '{}'", currentUser.getUsername());
+        userRepository.save(currentUser);
     }
 
     @Transactional
@@ -82,5 +98,30 @@ public class UserServiceImpl implements UserService {
         tokenService.deleteByUser(findOne(id));
         log.info("Deleting user with id '{}'", id);
         userRepository.deleteById(id);
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            return (User) authentication.getPrincipal();
+        }
+        throw new AccessDeniedException("Unauthorized");
+    }
+
+    private User applyUpdate(User user, UserUpdateRequest request) {
+        if (request.getUsername() != null) {
+            checkUsernameAvailable(request.getUsername());
+            user.setUsername(request.getUsername());
+        }
+        if (request.getEnabled() != null) {
+            user.setEnabled(request.getEnabled());
+        }
+        if (request.getRoles() != null) {
+            user.setRoles(request.getRoles());
+        }
+        if (request.getPoints() != null) {
+            user.setPoints(request.getPoints());
+        }
+        return user;
     }
 }
