@@ -65,12 +65,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        if (userService.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Error: Username is already taken!");
-        }
-
         User user = User.builder()
                 .username(registerRequest.getUsername())
                 .password(registerRequest.getPassword())
@@ -86,8 +80,7 @@ public class AuthController {
     public ResponseEntity<Object> logoutUser() {
         Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!"anonymousUser".equals(principle.toString())) {
-            User loggedUser = userService.findOne(((User) principle).getUsername());
-            refreshTokenService.deleteByUser(loggedUser);
+            refreshTokenService.deleteByUser((User) principle);
         }
 
         ResponseCookie jwtCookie = jwtUtils.getCleanJwtCookie();

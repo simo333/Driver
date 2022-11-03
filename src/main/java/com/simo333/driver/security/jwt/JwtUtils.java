@@ -26,8 +26,8 @@ public class JwtUtils {
     @Value("${app.security.jwtCookieAgeSeconds}")
     private Long jwtCookieAge;
 
-    public ResponseCookie generateJwtCookie(String email) {
-        String jwt = generateTokenFromUserEmail(email);
+    public ResponseCookie generateJwtCookie(String username) {
+        String jwt = generateTokenFromUsername(username);
         return generateCookie(jwtCookie, jwt, "/api");
     }
 
@@ -35,8 +35,8 @@ public class JwtUtils {
         return generateCookie(jwtRefreshCookie, refreshToken, "/api/auth/refresh-token");
     }
 
-    public String generateTokenFromUserEmail(String email) {
-        return Jwts.builder().setSubject(email)
+    public String generateTokenFromUsername(String username) {
+        return Jwts.builder().setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -69,11 +69,11 @@ public class JwtUtils {
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        return ResponseCookie.from(jwtCookie, null).path("/api").build();
+        return ResponseCookie.from(jwtCookie, "").path("/api").build();
     }
 
     public ResponseCookie getCleanJwtRefreshCookie() {
-        return ResponseCookie.from(jwtRefreshCookie, null).path("/api/auth/refresh-token").build();
+        return ResponseCookie.from(jwtRefreshCookie, "").path("/api/auth/refresh-token").build();
     }
 
     public boolean validateJwtToken(String authToken) {

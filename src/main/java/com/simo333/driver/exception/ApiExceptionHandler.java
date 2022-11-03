@@ -128,9 +128,9 @@ public class ApiExceptionHandler {
                 request.getDescription(false));
     }
 
-    @ExceptionHandler(value = UniqueViolationException.class)
+    @ExceptionHandler(value = UniqueNameViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiExceptionResponse handleInvalidAnswersException(UniqueViolationException ex, WebRequest request) {
+    public ApiExceptionResponse handleInvalidAnswersException(UniqueNameViolationException ex, WebRequest request) {
         return new ApiExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
