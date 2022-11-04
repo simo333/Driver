@@ -35,6 +35,7 @@ public class DriverApplication {
             userService.save(User.builder()
                     .username("szymon")
                     .password("12345678")
+                    .enabled(true)
                     .roles(Set.of(roleService.findOne(1L)))
                     .build());
         };

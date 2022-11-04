@@ -56,7 +56,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             log.error("Refresh token has expired and has been deleted from database. For refresh token: {}", token);
             return false;
         }
-        log.info("Token is up-to-date. For token: {}", token);
+        log.info("Token is up-to-date. For token: {}", token.getToken());
         return true;
     }
 

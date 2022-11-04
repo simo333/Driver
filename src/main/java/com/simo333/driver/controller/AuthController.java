@@ -7,12 +7,14 @@ import com.simo333.driver.model.User;
 import com.simo333.driver.payload.security.LoginRequest;
 import com.simo333.driver.payload.security.RegisterRequest;
 import com.simo333.driver.payload.security.UserInfoResponse;
+import com.simo333.driver.security.email_verification.OnRegistrationCompleteEvent;
 import com.simo333.driver.security.jwt.JwtUtils;
 import com.simo333.driver.service.RefreshTokenService;
 import com.simo333.driver.service.RoleService;
 import com.simo333.driver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,7 @@ public class AuthController {
     private final RoleService roleService;
     private final JwtUtils jwtUtils;
     private final RefreshTokenService refreshTokenService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @PostMapping("/login")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -69,9 +72,12 @@ public class AuthController {
                 .username(registerRequest.getUsername())
                 .password(registerRequest.getPassword())
                 .roles(Set.of(roleService.findOne(Role.Type.ROLE_USER)))
+                .enabled(false)
                 .build();
 
-        userService.save(user);
+        User registeredUser = userService.save(user);
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registeredUser));
+
         log.info("User '{}' registered successfully.", user.getUsername());
         return ResponseEntity.ok(String.format("User '%s' registered successfully.", user.getUsername()));
     }
@@ -102,7 +108,6 @@ public class AuthController {
                 log.info("Token refreshed successfully.");
                 return ResponseEntity.ok()
                         .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                        .header(HttpHeaders.SET_COOKIE, refreshTokenCookie)
                         .body("Token refreshed successfully.");
             }
         }
@@ -110,5 +115,4 @@ public class AuthController {
         throw new RefreshTokenException(refreshTokenCookie,
                 "Refresh token has expired.");
     }
-
 }
