@@ -33,9 +33,10 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         String userMail = user.getUsername();
         String subject = "Registration Confirmation";
         String confirmationUrl = appHostUrl + CONFIRMATION_URI + savedToken.getToken();
-        String message = "Confirm your e-mail with linkL: " + confirmationUrl;
+        String message = "Confirm your e-mail with link: " + confirmationUrl;
 
         SimpleMailMessage email = new SimpleMailMessage();
+        email.setFrom("DriverApp");
         email.setTo(userMail);
         email.setSubject(subject);
         email.setText(message);

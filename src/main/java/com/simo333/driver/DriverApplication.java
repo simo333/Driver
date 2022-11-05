@@ -36,7 +36,7 @@ public class DriverApplication {
                     .username("szymon")
                     .password("12345678")
                     .enabled(true)
-                    .roles(Set.of(roleService.findOne(1L)))
+                    .roles(Set.of(roleService.findOne(Role.Type.ROLE_USER)))
                     .build());
         };
     }

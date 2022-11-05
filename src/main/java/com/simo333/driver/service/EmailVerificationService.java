@@ -9,5 +9,9 @@ public interface EmailVerificationService {
 
     EmailVerificationToken getVerificationToken(String token);
 
+    EmailVerificationToken verifyToken(String token);
+
     void deleteToken(String token);
+
+    void confirmRegistration(String token);
 }

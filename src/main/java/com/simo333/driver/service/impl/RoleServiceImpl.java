@@ -27,7 +27,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role findOne(Role.Type type) {
-        return repository.findByName(type.name()).orElseThrow(() -> {
+        return repository.findByName(type).orElseThrow(() -> {
             log.error("Role with name '{}' not found", type.name());
             return new ResourceNotFoundException(String.format("Role with name '%s' not found", type.name()));
         });

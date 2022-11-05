@@ -1,6 +1,7 @@
 package com.simo333.driver.controller;
 
 import com.simo333.driver.exception.RefreshTokenException;
+import com.simo333.driver.model.EmailVerificationToken;
 import com.simo333.driver.model.RefreshToken;
 import com.simo333.driver.model.Role;
 import com.simo333.driver.model.User;
@@ -9,6 +10,7 @@ import com.simo333.driver.payload.security.RegisterRequest;
 import com.simo333.driver.payload.security.UserInfoResponse;
 import com.simo333.driver.security.email_verification.OnRegistrationCompleteEvent;
 import com.simo333.driver.security.jwt.JwtUtils;
+import com.simo333.driver.service.EmailVerificationService;
 import com.simo333.driver.service.RefreshTokenService;
 import com.simo333.driver.service.RoleService;
 import com.simo333.driver.service.UserService;
@@ -23,13 +25,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,6 +44,7 @@ public class AuthController {
     private final JwtUtils jwtUtils;
     private final RefreshTokenService refreshTokenService;
     private final ApplicationEventPublisher eventPublisher;
+    private final EmailVerificationService emailVerificationService;
 
     @PostMapping("/login")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -80,6 +81,12 @@ public class AuthController {
 
         log.info("User '{}' registered successfully.", user.getUsername());
         return ResponseEntity.ok(String.format("User '%s' registered successfully.", user.getUsername()));
+    }
+
+    @GetMapping("/confirmEmail")
+    public ResponseEntity<Object> confirmRegistration(@RequestParam("token") String token) {
+        emailVerificationService.confirmRegistration(token);
+        return ResponseEntity.ok("Account activated successfully.");
     }
 
     @PostMapping("/logout")
