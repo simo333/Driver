@@ -1,5 +1,6 @@
 package com.simo333.driver.model;
 
+import com.simo333.driver.annotations.email_validator.ValidEmail;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -30,6 +32,9 @@ public class User implements UserDetails {
     @Size(min = 6, max = 120)
     @Column(unique = true, updatable = false)
     private String username;
+    @ValidEmail
+    @Column(unique = true, updatable = false)
+    private String email;
     @NotBlank
     @Size(min = 8, max = 120)
     private String password;

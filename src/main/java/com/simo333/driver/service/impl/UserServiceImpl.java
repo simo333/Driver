@@ -1,6 +1,6 @@
 package com.simo333.driver.service.impl;
 
-import com.simo333.driver.exception.UsernameDuplicationException;
+import com.simo333.driver.exception.UserDuplicationException;
 import com.simo333.driver.model.User;
 import com.simo333.driver.payload.user.PatchUserRequest;
 import com.simo333.driver.payload.user.UserUpdateRequest;
@@ -58,17 +58,11 @@ public class UserServiceImpl implements UserService {
         return findOne(username);
     }
 
-    @Override
-    public void checkUsernameAvailable(String username) {
-        if (userRepository.existsByUsername(username)) {
-            throw new UsernameDuplicationException("User with this username already exists");
-        }
-    }
-
     @Transactional
     @Override
     public User save(User user) {
         checkUsernameAvailable(user.getUsername());
+        checkEmailAvailable(user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.info("Saving a new user: {}", user.getUsername());
         return userRepository.save(user);
@@ -106,6 +100,18 @@ public class UserServiceImpl implements UserService {
             return (User) authentication.getPrincipal();
         }
         throw new AccessDeniedException("Unauthorized");
+    }
+
+    private void checkUsernameAvailable(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new UserDuplicationException("User with this username already exists");
+        }
+    }
+
+    private void checkEmailAvailable(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new UserDuplicationException("User with this email already exists");
+        }
     }
 
     private User applyUpdate(User user, UserUpdateRequest request) {

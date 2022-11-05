@@ -1,7 +1,6 @@
 package com.simo333.driver.controller;
 
 import com.simo333.driver.exception.RefreshTokenException;
-import com.simo333.driver.model.EmailVerificationToken;
 import com.simo333.driver.model.RefreshToken;
 import com.simo333.driver.model.Role;
 import com.simo333.driver.model.User;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -71,6 +69,7 @@ public class AuthController {
     public ResponseEntity<Object> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         User user = User.builder()
                 .username(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
                 .password(registerRequest.getPassword())
                 .roles(Set.of(roleService.findOne(Role.Type.ROLE_USER)))
                 .enabled(false)
@@ -79,7 +78,7 @@ public class AuthController {
         User registeredUser = userService.save(user);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registeredUser));
 
-        log.info("User '{}' registered successfully.", user.getUsername());
+        log.info("User '{}' registered successfully. Check your email for account activation link.", user.getUsername());
         return ResponseEntity.ok(String.format("User '%s' registered successfully.", user.getUsername()));
     }
 

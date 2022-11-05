@@ -32,12 +32,13 @@ public class DriverApplication {
             roleService.save(roleUser);
             roleService.save(roleAdmin);
 
-            userService.save(User.builder()
-                    .username("szymon")
-                    .password("12345678")
-                    .enabled(true)
-                    .roles(Set.of(roleService.findOne(Role.Type.ROLE_USER)))
-                    .build());
+//            userService.save(User.builder()
+//                    .username("szymon")
+//                    .email("szymon.333@wp.pl")
+//                    .password("12345678")
+//                    .enabled(true)
+//                    .roles(Set.of(roleService.findOne(Role.Type.ROLE_USER)))
+//                    .build());
         };
     }
 
