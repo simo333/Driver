@@ -46,12 +46,12 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         String userEmail = user.getEmail();
         String username = user.getUsername();
         String senderName = "DRIVER APP";
-        String subject = "Registration Confirmation";
+        String subject = "Activate your account";
         String confirmationUrl = appHostUrl + CONFIRMATION_URI + token.getToken();
         String content = String.format("""
                 Dear %s,<br>
-                Please click the link below to verify your registration:<br>
-                <h3><a href="%s" target="_self">VERIFY</a></h3>
+                Please click the link below to activate your account:<br>
+                <h3><a href="%s" target="_self">ACTIVATE</a></h3>
                 Thank you,<br>
                 %s""", username, confirmationUrl, senderName);
 
