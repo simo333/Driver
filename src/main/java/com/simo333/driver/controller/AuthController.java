@@ -78,8 +78,9 @@ public class AuthController {
         User registeredUser = userService.save(user);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registeredUser));
 
-        log.info("User '{}' registered successfully. Check your email for account activation link.", user.getUsername());
-        return ResponseEntity.ok(String.format("User '%s' registered successfully.", user.getUsername()));
+        log.info("User '{}' registered successfully.", user.getUsername());
+        return ResponseEntity.ok(String.format(
+                "User '%s' registered successfully. Check your email for account activation link.", user.getUsername()));
     }
 
     @GetMapping("/confirmEmail")
