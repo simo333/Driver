@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.HashSet;
@@ -44,18 +43,5 @@ public class Advice {
     @PrePersist
     public void prePersist() {
         timeStamp = Instant.now();
-    }
-
-    @Override
-    public String toString() {
-        return "Advice{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", tags=" + tags +
-                ", likesQuantity=" + likesQuantity +
-                ", shareQuantity=" + shareQuantity +
-                ", timeStamp=" + timeStamp +
-                '}';
     }
 }

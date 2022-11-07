@@ -10,5 +10,5 @@ import java.util.Set;
 public class TrainingResultRequest {
     @NotNull
     private Long trainingId;
-    private final Set<Long> answers = new HashSet<>();
+    private Set<Long> answers = new HashSet<>();
 }

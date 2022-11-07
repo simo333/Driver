@@ -29,5 +29,4 @@ public class Question {
             orphanRemoval = true
     )
     private List<Answer> answers = new ArrayList<>();
-    //TODO files (photos or videos) maintenance
 }

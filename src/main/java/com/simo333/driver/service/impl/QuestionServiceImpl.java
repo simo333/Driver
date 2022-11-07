@@ -15,12 +15,15 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class QuestionServiceImpl implements QuestionService {
 
+    private static final int NUMBER_OF_QUIZ_QUESTIONS = 20;
     private static final int NUMBER_OF_CORRECT_ANSWERS = 1;
     private final QuestionRepository repository;
 
@@ -37,6 +40,15 @@ public class QuestionServiceImpl implements QuestionService {
         return repository.findAll(page);
     }
 
+    @Override
+    public Set<Question> collectRandom() {
+        Set<Question> questions = repository.findRandom(NUMBER_OF_QUIZ_QUESTIONS);
+        if (questions.size() < NUMBER_OF_QUIZ_QUESTIONS) {
+            throw new IllegalQuestionStateException
+                    ("Not enough questions to conduct a quiz. Minimal is " + NUMBER_OF_QUIZ_QUESTIONS);
+        }
+        return questions;
+    }
 
     @Transactional
     @Override

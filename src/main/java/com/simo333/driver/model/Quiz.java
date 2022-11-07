@@ -3,6 +3,7 @@ package com.simo333.driver.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.Instant;
 import java.util.Set;
 
@@ -24,5 +25,11 @@ public class Quiz {
     private User user;
     private Instant beginTimestamp;
     private Instant finishTimestamp;
+    @PositiveOrZero
     private int score;
+
+    @PrePersist
+    private void prePersist() {
+        beginTimestamp = Instant.now();
+    }
 }
