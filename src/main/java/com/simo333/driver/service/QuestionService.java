@@ -6,6 +6,8 @@ import com.simo333.driver.payload.question.QuestionUpdateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Set;
+
 public interface QuestionService {
 
     Question findOne(Long questionId);
@@ -17,4 +19,6 @@ public interface QuestionService {
     Question update(Long questionId, QuestionUpdateRequest request);
 
     void delete(Long questionId);
+
+    Set<Question> collectRandom();
 }
