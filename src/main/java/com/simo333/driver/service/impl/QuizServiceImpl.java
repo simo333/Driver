@@ -2,6 +2,7 @@ package com.simo333.driver.service.impl;
 
 import com.simo333.driver.model.Answer;
 import com.simo333.driver.model.Quiz;
+import com.simo333.driver.model.User;
 import com.simo333.driver.payload.quiz.NewQuizResponse;
 import com.simo333.driver.payload.quiz.QuizScoreRequest;
 import com.simo333.driver.payload.quiz.QuizScoreResponse;
@@ -12,6 +13,8 @@ import com.simo333.driver.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,9 +62,14 @@ public class QuizServiceImpl implements QuizService {
     public QuizScoreResponse verifyQuizScore(QuizScoreRequest request) {
         Quiz quiz = findOne(request.getQuizId());
         quiz.setFinishTimestamp(Instant.now());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
         long score = request.getAnswers().stream().filter(answerId -> answerService.findById(answerId).isCorrect()).count();
         int totalPoints = quiz.getQuestions().size();
         long duration = Duration.between(quiz.getBeginTimestamp(), quiz.getFinishTimestamp()).toSeconds();
+        if(user.getPoints() < score) {
+            user.setPoints((int) score);
+        }
         return new QuizScoreResponse(score, totalPoints, duration);
     }
 
