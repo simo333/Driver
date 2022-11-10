@@ -71,14 +71,10 @@ public class AdviceServiceImpl implements AdviceService {
         if (request.getDescription() != null) {
             advice.setDescription(request.getDescription());
         }
-        AdviceUpdateRequest.Option option = request.getTagsChange();
-        if (option == AdviceUpdateRequest.Option.REMOVE_ALL) {
-            advice.setTags(new HashSet<>());
-        } else if (option == AdviceUpdateRequest.Option.REPLACE) {
+
+        if (request.getTagNames() != null) {
             Set<Tag> tags = new HashSet<>();
-            if (request.getTagNames() != null) {
-                request.getTagNames().forEach(tagName -> tags.add(tagService.findOne(tagName)));
-            }
+            request.getTagNames().forEach(tagName -> tags.add(tagService.findOne(tagName)));
             advice.setTags(tags);
         }
 
