@@ -1,4 +1,4 @@
-# Driver
+# DriverAPI
 Java REST API based on given UX template. 
 The project is a result of Portfolio Lab course. The course was about creating web application based on UX templates and presentations.
 
