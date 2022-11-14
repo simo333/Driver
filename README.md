@@ -21,4 +21,4 @@ The project is a result of Portfolio Lab course. The course was about creating w
 * Hibernate 5.1.2
 * MySQL
 * JWT
-
+* JUnit 5
