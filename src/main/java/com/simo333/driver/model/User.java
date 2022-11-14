@@ -1,5 +1,6 @@
 package com.simo333.driver.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.simo333.driver.annotations.email_validator.ValidEmail;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"password"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
