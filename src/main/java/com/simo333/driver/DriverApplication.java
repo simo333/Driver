@@ -8,16 +8,15 @@ import com.simo333.driver.service.AnswerService;
 import com.simo333.driver.service.QuestionService;
 import com.simo333.driver.service.RoleService;
 import com.simo333.driver.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
 @SpringBootApplication
-@Slf4j
 public class DriverApplication {
 
     public static void main(String[] args) {
@@ -25,6 +24,7 @@ public class DriverApplication {
 
     }
 
+    @Profile("!test")
     @Bean
     CommandLineRunner run(RoleService roleService, UserService userService, QuestionService questionService,
                           AnswerService answerService) {

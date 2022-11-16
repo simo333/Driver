@@ -29,4 +29,17 @@ public class EmailVerificationToken {
     private void prePersist() {
         expirationDate = Instant.now().plus(EXPIRATION_TIME_HOURS, ChronoUnit.HOURS);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmailVerificationToken that = (EmailVerificationToken) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
