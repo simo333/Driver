@@ -64,6 +64,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Question update(Long questionId, QuestionUpdateRequest request) {
         Question question = findOne(questionId);
         log.info("Updating question. After changes: {}", question);
+        question.setContents(request.getQuestionText());
         return repository.save(question);
     }
 
@@ -81,7 +82,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     }
 
-    public void validateOneCorrectAnswer(QuestionCreateRequest request) {
+    private void validateOneCorrectAnswer(QuestionCreateRequest request) {
         long correctAnswers = request.getAnswers().stream().filter(AnswerCreateRequest::getIsCorrect).count();
         log.info(request.toString());
         if (correctAnswers != NUMBER_OF_CORRECT_ANSWERS) {
