@@ -8,7 +8,6 @@ import com.simo333.driver.payload.advice.AdviceUpdateRequest;
 import com.simo333.driver.repository.AdviceRepository;
 import com.simo333.driver.repository.TagRepository;
 import com.simo333.driver.service.AdviceService;
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
