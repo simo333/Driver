@@ -64,6 +64,10 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public void delete(Long answerId) {
         Answer answer = findById(answerId);
+        if(answer.getQuestion() == null) {
+            answerRepository.deleteById(answerId);
+            return;
+        }
         if (answerRepository.countByQuestionId(answer.getQuestion().getId()) == MINIMAL_ANSWERS_AMOUNT_PER_QUESTION) {
             throw new IllegalQuestionStateException("Cannot delete. Question must have at least 2 answers.");
         }
