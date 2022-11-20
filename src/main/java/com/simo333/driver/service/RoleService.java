@@ -11,7 +11,7 @@ public interface RoleService {
 
     Role findOne(Role.Type type);
 
-    Role findOne(Long userId);
+    Role findOne(Long roleId);
 
     Role save(Role role);
 
