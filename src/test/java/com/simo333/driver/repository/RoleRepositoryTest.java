@@ -18,7 +18,7 @@ class RoleRepositoryTest {
     private RoleRepository roleRepository;
 
     @Test
-    void shouldFindRoles() {
+    void shouldFindRole() {
         // given
         Role expectedRole = new Role();
         expectedRole.setName(Role.Type.ROLE_USER);
