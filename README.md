@@ -22,3 +22,4 @@ The project is a result of Portfolio Lab course. The course was about creating w
 * MySQL
 * JWT
 * JUnit 5
+* Mockito 4
