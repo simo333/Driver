@@ -14,6 +14,7 @@ Java REST API based on given UX template and presentations. It allows managing d
 * Manage access and refresh tokens
 
 
+
 ### USED TECHNOLOGIES:
 * Java 17
 * Spring 2.7.5
