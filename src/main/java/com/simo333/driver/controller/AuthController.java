@@ -89,6 +89,16 @@ public class AuthController {
         return ResponseEntity.ok("Account activated successfully.");
     }
 
+    @PostMapping("/resend-confirmation-email")
+    public ResponseEntity<Object> resendConfirmationEmail(@RequestParam String username) {
+        User user = userService.findOne(username);
+        if (user.isEnabled()) {
+            return ResponseEntity.badRequest().body("User is already activated.");
+        }
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
+        return ResponseEntity.ok("An email has been resent.");
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<Object> logoutUser() {
         Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
