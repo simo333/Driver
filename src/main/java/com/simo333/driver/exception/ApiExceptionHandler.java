@@ -10,6 +10,7 @@ import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -44,6 +45,17 @@ public class ApiExceptionHandler {
         return new ApiExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 message,
+                request.getDescription(false));
+    }
+
+    @ExceptionHandler(value = MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiExceptionResponse handleMissingServletRequestParameterException(MissingServletRequestParameterException ex, WebRequest request) {
+        String message = "Request body is missing or some of inputs are incorrect.";
+        log.error(ex.getLocalizedMessage());
+        return new ApiExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
                 request.getDescription(false));
     }
 
