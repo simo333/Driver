@@ -5,7 +5,7 @@ Java REST API based on given UX template and presentations. It allows managing d
 ![prototyp2](https://user-images.githubusercontent.com/24356805/201315218-e95bbc33-08bb-4baa-bbdd-fd076061f30a.jpg)
 
 ### FEATURES:
-* Sign up and sign in users with email verification (JMS) - sendind and resending actication email
+* Sign up and sign in users with email verification (JMS) - sending and resending actication email
 * Manage advices
 * Conduct quizzes
 * Conduct training for advices
