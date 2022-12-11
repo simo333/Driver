@@ -8,8 +8,11 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class PatchUserRequest {
+public class PasswordChangeRequest {
+
+    @NotBlank
+    private String oldPassword;
     @NotBlank
     @Size(min = 8, max = 120)
-    private String password;
+    private String newPassword;
 }

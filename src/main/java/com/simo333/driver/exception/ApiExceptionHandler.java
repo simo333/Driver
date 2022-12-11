@@ -158,4 +158,13 @@ public class ApiExceptionHandler {
                 request.getDescription(false));
     }
 
+    @ExceptionHandler(value = PasswordMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiExceptionResponse handlePasswordMismatchException(PasswordMismatchException ex, WebRequest request) {
+        return new ApiExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                request.getDescription(false));
+    }
+
 }
