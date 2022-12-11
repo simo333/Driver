@@ -1,7 +1,7 @@
 package com.simo333.driver.controller;
 
 import com.simo333.driver.model.User;
-import com.simo333.driver.payload.user.PatchUserRequest;
+import com.simo333.driver.payload.user.PasswordChangeRequest;
 import com.simo333.driver.payload.user.UserUpdateRequest;
 import com.simo333.driver.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +49,10 @@ public class UserController {
         return service.update(id, request);
     }
     @Secured("ROLE_USER")
-    @PatchMapping
+    @PatchMapping("/password-change")
     @ResponseStatus(OK)
-    public void patch(@RequestBody @Valid PatchUserRequest patch) {
-        service.patch(patch);
+    public void patch(@RequestBody @Valid PasswordChangeRequest patch) {
+        service.changeUserPassword(patch);
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})

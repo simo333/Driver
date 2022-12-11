@@ -1,8 +1,9 @@
 package com.simo333.driver.service.impl;
 
+import com.simo333.driver.exception.PasswordMismatchException;
 import com.simo333.driver.exception.UserDuplicationException;
 import com.simo333.driver.model.User;
-import com.simo333.driver.payload.user.PatchUserRequest;
+import com.simo333.driver.payload.user.PasswordChangeRequest;
 import com.simo333.driver.payload.user.UserUpdateRequest;
 import com.simo333.driver.repository.UserRepository;
 import com.simo333.driver.service.RefreshTokenService;
@@ -79,10 +80,13 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void patch(PatchUserRequest patch) {
+    public void changeUserPassword(PasswordChangeRequest patch) {
         User currentUser = getCurrentUser();
-        currentUser.setPassword(passwordEncoder.encode(patch.getPassword()));
-        log.info("Patching user's password. For user '{}'", currentUser.getUsername());
+        if (!passwordEncoder.matches(patch.getOldPassword(), currentUser.getPassword())) {
+            throw new PasswordMismatchException("Old password is incorrect");
+        }
+        currentUser.setPassword(passwordEncoder.encode(patch.getNewPassword()));
+        log.info("Changing user's password. For user '{}'", currentUser.getUsername());
         userRepository.save(currentUser);
     }
 
