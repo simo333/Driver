@@ -10,9 +10,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
     Page<User> findAll(Pageable page);
 
-    User findOne(Long userId);
+    User findById(Long userId);
 
-    User findOne(String username);
+    User findByUsername(String username);
+    
+    User findByEmail(String email);
 
     User save(User user);
 
