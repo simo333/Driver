@@ -2,6 +2,7 @@ package com.simo333.driver.controller;
 
 import com.simo333.driver.model.User;
 import com.simo333.driver.payload.user.PasswordChangeRequest;
+import com.simo333.driver.payload.user.PasswordResetRequest;
 import com.simo333.driver.payload.user.UserUpdateRequest;
 import com.simo333.driver.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +33,14 @@ public class UserController {
     @GetMapping("/{id}")
     @ResponseStatus(OK)
     public User getById(@PathVariable Long id) {
-        return service.findOne(id);
+        return service.findById(id);
     }
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/name/{name}")
     @ResponseStatus(OK)
     public User getByUsername(@PathVariable String name) {
-        return service.findOne(name);
+        return service.findByUsername(name);
     }
 
     @Secured("ROLE_ADMIN")
@@ -55,7 +56,21 @@ public class UserController {
         service.changeUserPassword(patch);
     }
 
+
+    @GetMapping("/password-reset")
+    @ResponseStatus(OK)
+    public void sendResetPasswordRequest(@RequestParam String email) {
+        service.findByEmail(email);
+    }
+
+    @PatchMapping("/password-reset")
+    @ResponseStatus(OK)
+    public void resetPassword(@RequestBody @Valid PasswordResetRequest patch) {
+//        service.changeUserPassword(patch);
+    }
+
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
+
     @DeleteMapping("/{id}")
     @ResponseStatus(OK)
     public void delete(@PathVariable Long id) {
