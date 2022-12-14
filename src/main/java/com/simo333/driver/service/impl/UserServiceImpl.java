@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findOne(String username) {
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> {
             log.error("User with username '{}' not found", username);
             return new ResourceNotFoundException(String.format("User with username '%s' not found", username));
@@ -47,7 +47,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findOne(Long userId) {
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> {
+            log.error("User with email '{}' not found", email);
+            return new ResourceNotFoundException(String.format("User with email '%s' not found", email));
+        });
+    }
+
+    @Override
+    public User findById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> {
             log.error("User with id '{}' not found", userId);
             return new ResourceNotFoundException(String.format("User with id '%s' not found", userId));
@@ -56,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return findOne(username);
+        return findByUsername(username);
     }
 
     @Transactional
@@ -72,7 +80,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User update(Long userId, UserUpdateRequest request) {
-        User user = findOne(userId);
+        User user = findById(userId);
         User updatedUser = applyUpdate(user, request);
         log.info("Updating user with id '{}'", user.getId());
         return userRepository.save(updatedUser);
@@ -93,7 +101,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void delete(Long id) {
-        tokenService.deleteByUser(findOne(id));
+        tokenService.deleteByUser(findById(id));
         log.info("Deleting user with id '{}'", id);
         userRepository.deleteById(id);
     }
